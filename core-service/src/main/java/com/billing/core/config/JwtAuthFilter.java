@@ -4,8 +4,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Collections;
 import com.nimbusds.jwt.SignedJWT;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -19,6 +22,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Object claim = jwt.getJWTClaimsSet().getClaim("tenantId");
         if(claim!=null){
           TenantContext.setCurrentTenant(java.util.UUID.fromString(claim.toString()));
+          // Set authentication for Spring Security
+          UsernamePasswordAuthenticationToken authentication =
+            new UsernamePasswordAuthenticationToken(claim.toString(), null, Collections.emptyList());
+          SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       }catch(Exception e){ }
     }

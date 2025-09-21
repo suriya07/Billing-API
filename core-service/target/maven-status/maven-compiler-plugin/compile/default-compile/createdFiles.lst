@@ -4,6 +4,7 @@ com/billing/core/config/SecurityConfig.class
 com/billing/core/plugin/PluginLoader.class
 com/billing/core/repository/TenantRepository.class
 com/billing/core/controller/TenantController.class
+com/billing/core/controller/AuthController.class
 com/billing/core/entity/Tenant$1.class
 com/billing/core/config/JwtAuthFilter.class
 com/billing/core/plugin/PluginGuard$1.class
@@ -13,6 +14,7 @@ com/billing/core/controller/InvoiceController.class
 com/billing/core/repository/InvoiceRepository.class
 com/billing/core/entity/Tenant.class
 com/billing/core/entity/Invoice.class
+com/billing/core/controller/AuthController$TokenResponse.class
 com/billing/core/config/TenantContext.class
 com/billing/core/plugin/PluginGuard.class
 com/billing/core/entity/PluginMeta.class

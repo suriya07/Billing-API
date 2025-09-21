@@ -13,8 +13,8 @@ public class InvoiceController {
   public InvoiceController(InvoiceService service){this.service = service;}
 
   @GetMapping
-  public List<Invoice> list(@RequestParam UUID tenantId){return service.listForTenant(tenantId);}
+  public List<Invoice> list(@RequestParam("tenantId") UUID tenantId){return service.listForTenant(tenantId);}
 
   @PostMapping
-  public Invoice create(@RequestParam UUID tenantId, @RequestBody Invoice inv){return service.create(tenantId, inv);}
+  public Invoice create(@RequestParam("tenantId") UUID tenantId, @RequestBody Invoice inv){return service.create(tenantId, inv);}
 }
