@@ -8,14 +8,46 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.web.bind.annotation.*;
 
+import com.billing.core.Model.*;
+import com.billing.core.entity.User;
+import com.billing.core.repository.UserRepository;
+import com.billing.core.service.JwtService;
+import com.billing.core.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 import java.util.Date;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
+    private final UserService userService;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private static final String SECRET = "mySecretKeyForJWTTokenGenerationTesting123456789";
+
+    @PostMapping("/signup")
+    public User signup(@RequestBody SignupRequest request) {
+        return userService.register(request);
+    }
+
+    @PostMapping("/login")
+    public AuthResponse login(@RequestBody LoginRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        String token = jwtService.generateToken(user.getUsername());
+        return new AuthResponse(token);
+    }
 
     @PostMapping("/token")
     public TokenResponse generateToken(@RequestParam("tenantId") UUID tenantId) {
